@@ -18,8 +18,14 @@ $id = (int) $pdo->lastInsertId();
 $created = $repository->find($id);
 assert($created !== null && $created['email'] === $email);
 
+$searchResult = $repository->paginate('Smoke', 1);
+assert($searchResult['total'] === 1);
+assert($searchResult['items'][0]['id'] === $id);
+
 $repository->update($id, ['name' => 'Updated', 'email' => $email, 'phone' => '', 'company' => 'Updated Company']);
 assert($repository->find($id)['name'] === 'Updated');
+assert($repository->paginate('Updated', 1)['total'] === 1);
+
 assert($repository->delete($id) === true);
 assert($repository->find($id) === null);
 
