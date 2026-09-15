@@ -1,0 +1,7 @@
+<?php
+declare(strict_types=1);require_once dirname(__DIR__).'/src/bootstrap.php';if(Auth::check())redirect('customers/index.php');$error=null;$email='';
+if($_SERVER['REQUEST_METHOD']==='POST'){Csrf::requireValid($_POST['_token']??null);$email=trim((string)($_POST['email']??''));if(Auth::tooManyAttempts())$error='試行回数が多すぎます。1分後に再試行してください。';elseif(Auth::attempt($email,(string)($_POST['password']??'')))redirect('customers/index.php');else{Auth::recordFailedAttempt();$error='メールアドレスまたはパスワードが正しくありません。';}}
+render_header('ログイン');?>
+<section class="auth-card"><p class="eyebrow">SECURE ACCESS</p><h1>管理システムへログイン</h1><p class="muted">顧客情報の操作には認証が必要です。</p>
+<?php if($error):?><div class="flash flash-error"><?=e($error)?></div><?php endif;?>
+<form method="post" class="stack"><input type="hidden" name="_token" value="<?=e(Csrf::token())?>"><label>メールアドレス<input type="email" name="email" value="<?=e($email)?>" required autocomplete="username"></label><label>パスワード<input type="password" name="password" required autocomplete="current-password"></label><button class="button button-primary">ログイン</button></form><p class="demo-note">初期デモ: admin@example.com / ChangeMe123!</p></section><?php render_footer();?>

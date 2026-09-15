@@ -1,0 +1,4 @@
+<?php
+declare(strict_types=1);require_once dirname(__DIR__,2).'/src/bootstrap.php';Auth::requireLogin();$id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);$repo=new CustomerRepository(Database::connection());$data=$id?$repo->find($id):null;if(!$data){http_response_code(404);exit('Customer not found.');}$errors=[];
+if($_SERVER['REQUEST_METHOD']==='POST'){Csrf::requireValid($_POST['_token']??null);$data=array_merge($data,$_POST);$errors=Validator::customer($data);if(!$errors){try{$repo->update((int)$id,$data);flash('success','顧客情報を更新しました。');redirect('customers/index.php');}catch(PDOException){$errors['email']='このメールアドレスは既に登録されています。';}}}
+render_header('顧客編集');?><div class="page-heading"><div><p class="eyebrow">EDIT CUSTOMER</p><h1>顧客編集</h1></div><a class="button button-ghost" href="<?=e(url('customers/index.php'))?>">一覧へ戻る</a></div><?php require __DIR__.'/form.php';render_footer();?>

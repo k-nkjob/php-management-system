@@ -1,0 +1,1 @@
+{"name":"PHP Management System","image":"mcr.microsoft.com/devcontainers/php:1-8.3-bookworm","forwardPorts":[8000],"portsAttributes":{"8000":{"label":"PHP Management System","onAutoForward":"openPreview"}},"postCreateCommand":"php database/seed.php","postStartCommand":"php -S 0.0.0.0:8000 -t public"}

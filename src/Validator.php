@@ -1,0 +1,3 @@
+<?php
+declare(strict_types=1);
+final class Validator{public static function customer(array $in):array{$e=[];$name=trim((string)($in['name']??''));$email=trim((string)($in['email']??''));$phone=trim((string)($in['phone']??''));$company=trim((string)($in['company']??''));if($name===''||mb_strlen($name)>100)$e['name']='氏名は1〜100文字で入力してください。';if(!filter_var($email,FILTER_VALIDATE_EMAIL)||mb_strlen($email)>255)$e['email']='有効なメールアドレスを入力してください。';if($phone!==''&&!preg_match('/^[0-9+() -]{6,30}$/',$phone))$e['phone']='電話番号の形式を確認してください。';if(mb_strlen($company)>120)$e['company']='会社名は120文字以内で入力してください。';return $e;}}

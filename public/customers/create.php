@@ -1,0 +1,4 @@
+<?php
+declare(strict_types=1);require_once dirname(__DIR__,2).'/src/bootstrap.php';Auth::requireLogin();$data=['name'=>'','email'=>'','phone'=>'','company'=>''];$errors=[];
+if($_SERVER['REQUEST_METHOD']==='POST'){Csrf::requireValid($_POST['_token']??null);$data=array_merge($data,$_POST);$errors=Validator::customer($data);if(!$errors){try{(new CustomerRepository(Database::connection()))->create($data);flash('success','顧客を登録しました。');redirect('customers/index.php');}catch(PDOException){$errors['email']='このメールアドレスは既に登録されています。';}}}
+render_header('顧客登録');?><div class="page-heading"><div><p class="eyebrow">NEW CUSTOMER</p><h1>顧客登録</h1></div><a class="button button-ghost" href="<?=e(url('customers/index.php'))?>">一覧へ戻る</a></div><?php require __DIR__.'/form.php';render_footer();?>
