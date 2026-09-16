@@ -1,0 +1,16 @@
+Options -Indexes
+RewriteEngine On
+
+# Application internals and configuration must never be served directly.
+RewriteRule ^(?:src|database|tests|\.git|\.github|\.devcontainer)(?:/|$) - [F,L,NC]
+RewriteRule ^config(?:\.|$) - [F,L,NC]
+RewriteRule ^(?:README\.md|DEPLOY_INFINITYFREE\.md)$ - [F,L,NC]
+<FilesMatch "\.(?:sql|sqlite|log|env)$">
+    Require all denied
+</FilesMatch>
+
+# InfinityFree fixes the document root to htdocs. Route public requests
+# into the repository's public directory without exposing internals.
+RewriteRule ^$ public/index.php [L]
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.+)$ public/$1 [L]
